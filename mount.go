@@ -52,6 +52,7 @@ func parseOptions(optionsString string) (options map[string]string) {
 	return
 }
 
+// MntOpsString returns the serialized MntOps value
 func (mount *Mount) MntOpsString() (opsstring string) {
 	first := true
 	for key, value := range mount.MntOps {
@@ -75,10 +76,14 @@ func (mount *Mount) String() string {
 	return mount.Sprintf("%s %s %s %s %d %d")
 }
 
+// Sprintf serializes the object according to the given format
 func (mount *Mount) Sprintf(format string) string {
 	return fmt.Sprintf(format, mount.Spec, mount.File, mount.VfsType, mount.MntOpsString(), mount.Freq, mount.PassNo)
 }
 
+// PaddedString serializes the objet into fstab format with configurable column width.
+// Each positional argument specifies the width for the column in order. Up to 6 arguments
+// are supported, outstanding arguments will be ignored.
 func (mount *Mount) PaddedString(paddings ...int) string {
 	stringPaddings := 4
 	intPaddings := 2
@@ -125,6 +130,7 @@ func (mount *Mount) IsNFS() bool {
 	return "nfs" == mount.VfsType
 }
 
+// Equals compares 2 Mount objects
 func (mount *Mount) Equals(other *Mount) bool {
 	return reflect.DeepEqual(*mount, *other)
 }

@@ -22,6 +22,7 @@ func (mounts Mounts) String() (output string) {
 	return
 }
 
+// PaddedString serializes a list of mounts to the fstab format with padding.
 func (mounts Mounts) PaddedString(paddings ...int) (output string) {
 	for i, mount := range mounts {
 		if i > 0 {
