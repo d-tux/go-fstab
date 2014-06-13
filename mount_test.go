@@ -30,6 +30,30 @@ var successfulParseLineExpectations map[string]Mount = map[string]Mount{
 	},
 }
 
+var successfulMountStringExpectations map[string]Mount = map[string]Mount{
+	"/dev/sda / ext4 defaults 1 2": Mount{
+		"/dev/sda",
+		"/",
+		"ext4",
+		map[string]string{
+			"defaults": "",
+		},
+		1,
+		2,
+	},
+
+	"UUID=homer / ext4 uid=0 0 0": Mount{
+		"UUID=homer",
+		"/",
+		"ext4",
+		map[string]string{
+			"uid": "0",
+		},
+		0,
+		0,
+	},
+}
+
 func TestParseLine(t *testing.T) {
 	for line, expectation := range successfulParseLineExpectations {
 		mount, err := ParseLine(line)
@@ -44,6 +68,15 @@ func TestParseLine(t *testing.T) {
 
 		if 0 == strings.Index(mount.Spec, "UUID") && mount.SpecType() != UUID {
 			t.Errorf("Expected SpecType to be UUID")
+		}
+	}
+}
+
+func TestMountString(t *testing.T) {
+	for expectation, mount := range successfulMountStringExpectations {
+		str := mount.String()
+		if str != expectation {
+			t.Errorf("Expected '%s', got '%s'", expectation, str)
 		}
 	}
 }

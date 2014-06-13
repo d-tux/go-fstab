@@ -11,12 +11,23 @@ import (
 type Mounts []*Mount
 
 // String serializes a list of mounts to the fstab format
-func String(mounts Mounts) (output string) {
+func (mounts Mounts) String() (output string) {
 	for i, mount := range mounts {
 		if i > 0 {
 			output += "\n"
 		}
 		output += mount.String()
+	}
+
+	return
+}
+
+func (mounts Mounts) PaddedString(paddings ...int) (output string) {
+	for i, mount := range mounts {
+		if i > 0 {
+			output += "\n"
+		}
+		output += mount.PaddedString(paddings...)
 	}
 
 	return

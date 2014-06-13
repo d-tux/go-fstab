@@ -72,7 +72,49 @@ func (mount *Mount) MntOpsString() (opsstring string) {
 
 // String serializes the object into fstab format
 func (mount *Mount) String() string {
-	return fmt.Sprintf("%-21s %-21s %-21s %-21s %2d %2d", mount.Spec, mount.File, mount.VfsType, mount.MntOpsString(), mount.Freq, mount.PassNo)
+	return mount.Sprintf("%s %s %s %s %d %d")
+}
+
+func (mount *Mount) Sprintf(format string) string {
+	return fmt.Sprintf(format, mount.Spec, mount.File, mount.VfsType, mount.MntOpsString(), mount.Freq, mount.PassNo)
+}
+
+func (mount *Mount) PaddedString(paddings ...int) string {
+	stringPaddings := 4
+	intPaddings := 2
+	if len(paddings) < stringPaddings {
+		stringPaddings = len(paddings)
+		intPaddings = 0
+	} else {
+		intPaddings = len(paddings) - stringPaddings
+		if intPaddings > 2 {
+			intPaddings = 2
+		}
+	}
+
+	var fields []string = make([]string, 0, 6)
+	{
+		for _, padding := range paddings[:stringPaddings] {
+			fields = append(fields, "%-"+strconv.Itoa(padding)+"s")
+		}
+
+		for i := len(fields); i < 4; i++ {
+			fields = append(fields, "%s")
+		}
+	}
+
+	if intPaddings > 0 {
+		for _, padding := range paddings[4:(4 + intPaddings)] {
+			fields = append(fields, "%"+strconv.Itoa(padding)+"d")
+		}
+	}
+
+	for i := len(fields); i < 6; i++ {
+		fields = append(fields, "%d")
+	}
+
+	fmt.Printf("%d %d\n%v\n%v\n", stringPaddings, intPaddings, paddings, fields)
+	return mount.Sprintf(strings.Join(fields, " "))
 }
 
 func (mount *Mount) IsSwap() bool {
