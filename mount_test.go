@@ -38,7 +38,7 @@ func TestParseLine(t *testing.T) {
 			continue
 		}
 
-		if !mount.Equals(expectation) {
+		if !mount.Equals(&expectation) {
 			t.Errorf("Expected %+v, got %+v", expectation, mount)
 		}
 

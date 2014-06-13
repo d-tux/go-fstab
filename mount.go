@@ -52,7 +52,7 @@ func parseOptions(optionsString string) (options map[string]string) {
 	return
 }
 
-func (mount Mount) MntOpsString() (opsstring string) {
+func (mount *Mount) MntOpsString() (opsstring string) {
 	first := true
 	for key, value := range mount.MntOps {
 		if first {
@@ -71,7 +71,7 @@ func (mount Mount) MntOpsString() (opsstring string) {
 }
 
 // String serializes the object into fstab format
-func (mount Mount) String() string {
+func (mount *Mount) String() string {
 	return fmt.Sprintf("%-21s %-21s %-21s %-21s %2d %2d", mount.Spec, mount.File, mount.VfsType, mount.MntOpsString(), mount.Freq, mount.PassNo)
 }
 
@@ -83,8 +83,8 @@ func (mount *Mount) IsNFS() bool {
 	return "nfs" == mount.VfsType
 }
 
-func (mount Mount) Equals(other Mount) bool {
-	return reflect.DeepEqual(mount, other)
+func (mount *Mount) Equals(other *Mount) bool {
+	return reflect.DeepEqual(*mount, *other)
 }
 
 // SpecType returns the device identifier type
