@@ -27,6 +27,16 @@ type Mount struct {
 	PassNo int
 }
 
+const (
+	Path = 0
+	Label
+	UUID
+	PartUUID
+	PartLabel
+)
+
+type DeviceIdentifierType int
+
 // parseOptions parses the options field into an array of strings
 func parseOptions(options string) []string {
 	return strings.Split(options, ",")
@@ -43,6 +53,39 @@ func (mount *Mount) IsSwap() bool {
 
 func (mount *Mount) IsNFS() bool {
 	return "nfs" == mount.VfsType
+}
+
+// SpecType returns the device identifier type
+func (mount *Mount) SpecType() (spectype DeviceIdentifierType) {
+	bits := strings.Split(mount.Spec, "=")
+	switch strings.ToUpper(bits[0]) {
+	case "UUID":
+		spectype = UUID
+
+	case "LABEL":
+		spectype = Label
+
+	case "PARTUUID":
+		spectype = PartUUID
+
+	case "PARTLABEL":
+		spectype = PartLabel
+
+	default:
+		spectype = Path
+	}
+	return
+}
+
+// SpecType returns the device identifier value; that is if Spec is
+// "UUID=vogons-ate-my-sandwich", it will return "vogons-ate-my-sandwich"
+func (mount *Mount) SpecValue() string {
+	bits := strings.Split(mount.Spec, "=")
+	if 1 == len(bits) {
+		return mount.Spec
+	} else {
+		return bits[1]
+	}
 }
 
 // ParseLine parses a single line (of an fstab).
