@@ -72,7 +72,7 @@ func ParseLine(line string) (mount *Mount, err error) {
 		if len(fields) > 4 {
 			mount.Freq, convErr = strconv.Atoi(fields[4])
 			if nil != convErr {
-				return nil, fmt.Errorf("%s it not a number", fields[4])
+				return nil, fmt.Errorf("%s is not a number", fields[4])
 			}
 		}
 
