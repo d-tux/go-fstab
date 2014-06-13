@@ -2,6 +2,7 @@ package fstab
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -80,6 +81,10 @@ func (mount *Mount) IsSwap() bool {
 
 func (mount *Mount) IsNFS() bool {
 	return "nfs" == mount.VfsType
+}
+
+func (mount Mount) Equals(other Mount) bool {
+	return reflect.DeepEqual(mount, other)
 }
 
 // SpecType returns the device identifier type
