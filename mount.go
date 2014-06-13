@@ -18,7 +18,7 @@ type Mount struct {
 	VfsType string
 
 	// Mount options associated with the filesystem
-	MntOps []string
+	MntOps map[string]string
 
 	// Used by dump to determine which filesystems need to be dumped.
 	Freq int
@@ -38,13 +38,40 @@ const (
 type DeviceIdentifierType int
 
 // parseOptions parses the options field into an array of strings
-func parseOptions(options string) []string {
-	return strings.Split(options, ",")
+func parseOptions(optionsString string) (options map[string]string) {
+	options = make(map[string]string)
+	for _, option := range strings.Split(optionsString, ",") {
+		bits := strings.Split(strings.TrimSpace(option), "=")
+		if len(bits) > 1 {
+			options[bits[0]] = bits[1]
+		} else {
+			options[bits[0]] = ""
+		}
+	}
+	return
+}
+
+func (mount Mount) MntOpsString() (opsstring string) {
+	first := true
+	for key, value := range mount.MntOps {
+		if first {
+			first = false
+		} else {
+			opsstring += ","
+		}
+
+		opsstring += key
+
+		if "" != value {
+			opsstring += "=" + value
+		}
+	}
+	return
 }
 
 // String serializes the object into fstab format
-func (mount *Mount) String() string {
-	return fmt.Sprintf("%-21s %-21s %-21s %-21s %2d %2d", mount.Spec, mount.File, mount.VfsType, strings.Join(mount.MntOps, ","), mount.Freq, mount.PassNo)
+func (mount Mount) String() string {
+	return fmt.Sprintf("%-21s %-21s %-21s %-21s %2d %2d", mount.Spec, mount.File, mount.VfsType, mount.MntOpsString(), mount.Freq, mount.PassNo)
 }
 
 func (mount *Mount) IsSwap() bool {
