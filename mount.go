@@ -182,7 +182,7 @@ func ParseLine(line string) (mount *Mount, err error) {
 
 	fields := strings.Fields(line)
 	if len(fields) < 4 {
-		return nil, fmt.Errorf("too few fields (%i), at least 4 are expected", len(fields))
+		return nil, fmt.Errorf("too few fields (%d), at least 4 are expected", len(fields))
 	} else {
 		mount = new(Mount)
 		mount.Spec = fields[0]
