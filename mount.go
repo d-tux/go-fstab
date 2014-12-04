@@ -28,15 +28,15 @@ type Mount struct {
 	PassNo int
 }
 
-const (
-	Path = 0
-	Label
-	UUID
-	PartUUID
-	PartLabel
-)
-
 type DeviceIdentifierType int
+
+const (
+	Path      DeviceIdentifierType = iota
+	Label     DeviceIdentifierType = iota
+	UUID      DeviceIdentifierType = iota
+	PartUUID  DeviceIdentifierType = iota
+	PartLabel DeviceIdentifierType = iota
+)
 
 // parseOptions parses the options field into an array of strings
 func parseOptions(optionsString string) (options map[string]string) {
