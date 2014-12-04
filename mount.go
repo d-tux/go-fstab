@@ -73,11 +73,11 @@ func (mount *Mount) MntOpsString() (opsstring string) {
 
 // String serializes the object into fstab format
 func (mount *Mount) String() string {
-	return mount.Sprintf("%s %s %s %s %d %d")
+	return mount.format("%s %s %s %s %d %d")
 }
 
-// Sprintf serializes the object according to the given format
-func (mount *Mount) Sprintf(format string) string {
+// format serializes the object according to the given format
+func (mount *Mount) format(format string) string {
 	return fmt.Sprintf(format, mount.Spec, mount.File, mount.VfsType, mount.MntOpsString(), mount.Freq, mount.PassNo)
 }
 
@@ -119,7 +119,7 @@ func (mount *Mount) PaddedString(paddings ...int) string {
 	}
 
 	fmt.Printf("%d %d\n%v\n%v\n", stringPaddings, intPaddings, paddings, fields)
-	return mount.Sprintf(strings.Join(fields, " "))
+	return mount.format(strings.Join(fields, " "))
 }
 
 func (mount *Mount) IsSwap() bool {
