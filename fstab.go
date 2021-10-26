@@ -65,7 +65,7 @@ func Parse(source io.Reader) (mounts Mounts, err error) {
 		lineNo++
 		mount, err := ParseLine(scanner.Text())
 		if nil != err {
-			return nil, fmt.Errorf("Syntax error at line %d: %s", lineNo, err)
+			return nil, fmt.Errorf("syntax error at line %d: %s", lineNo, err)
 		}
 
 		if nil != mount {
@@ -78,4 +78,19 @@ func Parse(source io.Reader) (mounts Mounts, err error) {
 	}
 
 	return mounts, nil
+}
+
+func (mount Mounts) WritetoFile(file string) error {
+	re := mount.String()
+	f, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.WriteString(re)
+	if err != nil {
+		return err
+	}
+	return nil
 }

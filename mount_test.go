@@ -80,3 +80,13 @@ func TestMountString(t *testing.T) {
 		}
 	}
 }
+
+func TestWritetoFile(t *testing.T) {
+	mounts, err := ParseSystem()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := mounts.WritetoFile("/etc/tmp_fstab"); err != nil {
+		t.Fatal(err)
+	}
+}
